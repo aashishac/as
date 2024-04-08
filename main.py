@@ -62,8 +62,8 @@ import functools
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.urandom(24)
 app.config['UPLOADED_PHOTOS_DEST'] = 'static/image/product'
-#photos = UploadSet('photos', IMAGES)
-#configure_uploads(app, photos)
+photos = UploadSet('photos', IMAGES)
+configure_uploads(app, photos)
 
 app.secret_key = '8gBm/:&EnhH.1/q'
 # Config MySQL
