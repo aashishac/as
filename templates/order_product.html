@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block body %}
+<style>
+
+     h1, h3 {
+        color: #007bff;
+    }
+
+    .container{
+    zoom:90%}
+</style>
+<!-- Page Content -->
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 my-4">
+             <a href="#" class="btn btn-primary" onclick="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 4.354a.5.5 0 0 0 0 .708L7.707 8l3.647 3.646a.5.5 0 1 0 .708-.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 0-.708-.708L7.707 7.293a1.5 1.5 0 0 0 0 2.121l3.647 3.646a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0 0-.708z"/>
+        </svg> Back
+    </a>
+            <script>
+function goBack() {
+  window.history.back();
+}
+</script>
+            <h1 class="my-4">Categories</h1>
+            <div class="list-group">
+                <a href="/fiction" class="list-group-item">Fiction</a>
+                <a href="/nonfiction" class="list-group-item">Non-Fiction</a>
+                <a href="/scifi" class="list-group-item">Sci-fi</a>
+                <a href="/history" class="list-group-item">History</a>
+            </div>
+        </div>
+        <!-- /.col-lg-3 -->
+        <div class="col-lg-9">
+            <div class="row">
+                {% for product in [fiction] %}
+                <div class="col-lg-6">
+                    <div class="card mt-4">
+                                <img class="card-img-top img-fluid"
+                                    src="{{ url_for('static', filename='image/product/' + product.category + '/' + product.picture) }}"
+                                    alt="{{ product.pName }}">
+                            </div>
+                </div>
+                <!-- /.card -->
+                <div class="col-lg-6">
+                    <div class="card card-outline-secondary my-4">
+                        <div class="card-header">
+                            Order Details
+                        </div>
+                        <div class="card-body">
+                            {% from "includes/_formhelpers.html" import render_field %}
+                            <form method="POST" action="/{{product.category}}?order={{product.id}}">
+                                <div class="form-group">
+                                    {{render_field(form.name, class_="form-control")}}
+                                </div>
+
+                                <div class="form-group">
+                                    {{render_field(form.mobile_num, class_="form-control")}}
+                                </div>
+
+                                <div class="form-group">
+                                    {{render_field(form.quantity, class_="form-control")}}
+                                </div>
+
+                                <div class="form-group">
+                                    {{render_field(form.order_place, class_="form-control")}}
+                                </div>
+                                <button type="submit" class="btn btn-primary">Confirm Order</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- /.card -->
+
+            </div>
+             <!--
+            {% if x == '' %}
+            <h2 class="mb-4">No recommendation found</h2>
+            {% else%}
+            <h2 class="mb-4">Recommended for you:</h2>
+            <div class="row">
+                {% for product in x %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="card mb-4">
+                        <a href="/{{product.category}}?view={{product.id}}">
+                            <div class="card-img-top id_{{product.id}}"
+                                 style="background: url('static/image/product/{{product.category}}/{{product.picture}}'); background-repeat:no-repeat; background-size: cover; height:200px;width:100% "></div>
+                        </a>
+                        <div class="card-body">
+                            <h5><a class="card-title" href="/{{product.category}}?view={{product.id}}">{{
+                                product.pName}}</a></h5>
+                            <h4>৳{{product.price}}</h4>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            -->
+        </div>
+        <!-- /.col-lg-9 -->
+
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+{% endblock %}

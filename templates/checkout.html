@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'layout.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .receipt {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .proceed-button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width : 50%
+
+        }
+        .proceed-button:hover {
+            background-color: #45a049;
+
+        }
+
+        .go-back-button {
+    display: block;
+    margin: 20px auto; /* Center the button horizontally */
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 30%;
+}
+        .go-back-button:hover {
+            background-color: #007bff;
+        }
+
+        .receipt{
+        zoom:85%;}
+
+
+       .proceed-button {
+    padding: 10px 20px;
+    background-color: #45a049; /* Orange color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+          .proceed-button-khalti{
+    padding: 10px 20px;
+    background-color: red; /* Orange color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+        .proceed-button-khalti{
+            display: block;
+            margin: 20px auto;
+            padding: 12px;
+            background-color: blue;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 18px;
+
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width : 50%
+
+        }
+        .proceed-button-khalti:hover {
+            background-color: #45a049;
+
+        }
+
+    </style>
+</head>
+<body>
+<br>
+<br>
+<div class="receipt">
+        <h2>Checkout</h2>
+
+        {% if cart_items %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Discount</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product_id, item in cart_items.items() %}
+                        <tr>
+                            <td>{{ item['pName'] }}</td>
+                            <td>Rs.{{ item['price'] }}</td>
+                            <td>{{ item['quantity'] }}</td>
+                            <td>{{ item['discount'] }}%</td>
+                          <td class="total-price">Rs.{{ item['price'] * item['quantity'] * (1 - item['discount'] / 100) }}</td>
+
+                            <!-- Updated total calculation -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="total">
+                <h3>Grand Total: Rs.{{ total_price }}</h3>
+            </div>
+
+
+
+            <a href="javascript:history.back()" class="go-back-button">Go Back</a> <!-- Go back button -->
+
+
+ <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" method="POST">
+    <input type="hidden" id="amount" name="amount" value="{{ total_price }}" required>
+    <input type="hidden" id="tax_amount" name="tax_amount" value="0" required>
+    <input type="hidden" id="total_amount" name="total_amount" value="{{ total_price }}" required>
+    <input type="hidden" id="transaction_uuid" name="transaction_uuid" value="{{ transaction_uuid }}" required>
+    <input type="hidden" id="product_code" name="product_code" value="EPAYTEST" required>
+    <input type="hidden" id="product_service_charge" name="product_service_charge" value="0" required>
+    <input type="hidden" id="product_delivery_charge" name="product_delivery_charge" value="0" required>
+    <input type="hidden" id="success_url" name="success_url" value="http://127.0.0.1:5000/success_url" required>
+    <input type="hidden" id="failure_url" name="failure_url" value="https://google.com" required>
+    <input type="hidden" id="signed_field_names" name="signed_field_names" value="total_amount,transaction_uuid,product_code" required>
+    <input type="hidden" id="signature" name="signature" value="{{ signature }}" required > <!-- Hidden input for the signature -->
+    <input  class="proceed-button"  value="Proceed to Payment via Esewa" type="submit">
+</form>
+<form action="/initiate_payment" method="POST">
+        <input type="hidden" id="return_url" name="return_url" value="http://127.0.0.1:5000/success_url_khalti" required placeholder="Return URL">
+        <input type="hidden" id="website_url" name="website_url" required value="http://127.0.0.1:5000/" placeholder="Website URL">
+        <input type="hidden" id="amount" name="amount" required value="{{ total_price }}" placeholder="Amount (in Paisa)">
+        <input type="hidden" id="purchase_order_id" name="purchase_order_id" required value="{{ uid }}" placeholder="Purchase Order ID">
+
+        <input type="hidden" id="customer_info" name="customer_info" value="{{ session.s_name }}" placeholder="Customer Info">
+
+
+        <!-- Repeat the above lines for additional amounts -->
+
+        <input type="hidden" id="product_name" name="product_name"  value="Books" placeholder="Product Name">
+
+        <!-- Repeat the above lines for additional product details -->
+       <input  class="proceed-button-khalti"  value="Proceed to Payment via khalti" type="submit">
+    </form>
+
+
+
+        {% else %}
+            <p>No items in the cart.</p>
+        {% endif %}
+
+        <p>{{ message }}</p>
+    </div>
+<script>
+    function incrementQuantity(button) {
+        var quantityElement = button.parentNode.querySelector('span');
+        var currentQuantity = parseInt(quantityElement.textContent);
+        quantityElement.textContent = currentQuantity + 1;
+        updateTotalPrice(button);
+    }
+
+    function decrementQuantity(button) {
+        var quantityElement = button.parentNode.querySelector('span');
+        var currentQuantity = parseInt(quantityElement.textContent);
+        if (currentQuantity > 1) {
+            quantityElement.textContent = currentQuantity - 1;
+            updateTotalPrice(button);
+        }
+    }
+
+    function updateTotalPrice(button) {
+        var row = button.closest('tr');
+        var price = parseFloat(row.querySelector('td:nth-child(2)').textContent.replace('Rs.', ''));
+        var quantity = parseInt(row.querySelector('.quantity-adjust span').textContent);
+        var totalPrice = price * quantity;
+        row.querySelector('.total-price').textContent = 'Rs.' + totalPrice.toFixed(2);
+
+        updateGrandTotal();
+    }
+
+    function updateGrandTotal() {
+        var totalPriceElements = document.querySelectorAll('.total-price');
+        var grandTotal = 0;
+
+        totalPriceElements.forEach(function(element) {
+            grandTotal += parseFloat(element.textContent.replace('Rs.', ''));
+        });
+
+        document.getElementById('grand-total').textContent = 'Rs.' + grandTotal.toFixed(2);
+    }
+
+    function goBack() {
+        setTimeout(function() {
+            window.location.href = document.referrer; // Reload the previous page
+        }, 100); // Adjust the delay time if necessary
+    }
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac-sha256.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.min.js"></script>
+
+
+
+
+
+</body>
+
+{% endblock %}
+</html>

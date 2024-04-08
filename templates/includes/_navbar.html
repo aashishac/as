@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Books Casa</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <!-- Your Custom CSS -->
+  <style>
+    .navbar-custom {
+      background-color:  #d5e2e1;
+      justify-content: space-between; /* Align items horizontally with space between them */
+    }
+
+    .navbar-brand {
+      color: grey;
+      font-size: 24px;
+      font-weight: bold;
+      padding-top: 10px; /* Add padding to align vertically */
+      hover: grey;
+    }
+
+    .navbar-nav {
+      align-items: center; /* Align items vertically */
+    }
+
+    .navbar-nav .nav-item {
+      margin-right: 15px; /* Adjust spacing between nav items */
+    }
+
+    .navbar-nav .nav-item .nav-link {
+      color: grey;
+      transition: color 0.3s ease; /* Smooth transition for color change */
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+      color: black; /* Change color on hover */
+    }
+
+    .search-form {
+      max-width: 500px;
+
+    }
+
+    .form-control {
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #66afe9;
+    }
+
+    .btn {
+      border-radius: 5px;
+      padding: 10px 20px;
+      margin-left: 10px;
+      background-color: #28a745;
+      border: 1px solid #28a745;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: black;
+      border-color: #1e7e34;
+    }
+
+    .cart-link {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cart-link .item-count {
+      position: absolute;
+      top: -5px;
+      right: -3px;
+      background-color: red;
+      color: white;
+      border-radius: 40%;
+      padding: 3px 5px;
+      font-size: 12px;
+    }
+navbar-brand .i {
+        color: orange;
+        margin-right: 10px;
+    }
+
+
+      .input-group{
+      margin-right :30px;
+      }
+.search-form{
+      margin-top:13px;
+
+
+     }
+
+
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-custom bg-custom border-bottom shadow-sm fixed-top">
+    <a class="navbar-brand" href="/"style="font-family: 'Your Nice Font', cursive; font-size: 30px;margin-left: 7%;color : #010101   ;" >
+      <i class="fas fa-book-open fa-lg" style="margin-right: 10px; color: orange;" ></i> Books Casa
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+     <ul class="navbar-nav mr-auto">
+    {% if session.logged_in %}
+    <li class="nav-item"><a href="/" class="nav-link"><span class=""></span> Home</a></li>
+    <li class="nav-item"><a href="/recommend" class="nav-link"><span class=""></span> Books Recommender</a></li>
+    <li class="nav-item"><a href="/profile?user={{session.uid}}" class="nav-link"><span class=""></span> Profile</a></li>
+    <li>
+        <div id="cart">
+            <a class="link cart-link" href="/cart">
+                <img src="{{ url_for('static', filename='image/shoppingCart.png') }}" id="cartIcon" height="40" width="40" />
+                <span class="item-count">{{ noOfItems }}</span>
+            </a>
+        </div>
+    </li>
+    <li class="nav-item"><a href="/out" class="nav-link"><span class=""></span> Logout</a></li>
+    {% else %}
+    <li class="nav-item"><a href="/" class="nav-link"><span class=""></span> Home</a></li>
+    <li class="nav-item"><a href="/recommend" class="nav-link"><span class=""></span> Books Recommender</a></li>
+    <li class="nav-item"><a href="/register" class="nav-link"><span class=""></span> Signup</a></li>
+    <li class="nav-item"><a href="/login" class="nav-link"><span class=""></span> Login</a></li>
+    {% endif %}
+</ul>
+      <form action="/search" method="get" class="search-form ml-auto">
+    <div class="input-group">
+        <input type="text" class="form-control" autocomplete="off" name="q" placeholder="Search for books...">
+        <div class="input-group-append">
+            <button class="btn btn-success" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+    </div>
+  </nav>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

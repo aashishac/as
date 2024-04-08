@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+{% block body %}
+<!-- Page Content -->
+
+<style>
+
+
+    .container{
+            zoom:95%;}
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+             <br>
+            <br>
+             <h5> Hello,</h5>
+            <h1 class="my-4">{{session.s_name}}</h1>
+
+            <a href="#" class="btn btn-primary" onclick="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 4.354a.5.5 0 0 0 0 .708L7.707 8l3.647 3.646a.5.5 0 1 0 .708-.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 0-.708-.708L7.707 7.293a1.5 1.5 0 0 0 0 2.121l3.647 3.646a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0 0-.708z"/>
+        </svg> Back
+    </a>
+              <script>
+function goBack() {
+  window.history.back();
+}
+
+</script>
+            <br>
+            <br>
+            <div class="list-group">
+                <a href="/profile?user={{session.uid}}" class="list-group-item">Pre-Order List</a>
+                <a href="/settings?user={{session.uid}}" class="list-group-item">Update Profile </a>
+                <a href="{{ url_for('wishlist', user=session.uid) }}" class="list-group-item">Wish-list</a>
+                 <a href="/mypurchase?user={{session.uid}}" class="list-group-item">My Purchase </a>
+
+            </div>
+        </div>
+        <!-- /.col-lg-3 -->
+        <div class="col-lg-9">
+            {% include 'includes/_flashmsg.html' %}
+             <br>
+                    <br>
+            <div class="card card-default my-4">
+                <div class="card-header">
+
+                    <i class="fa fa-bar-chart-o fa-fw"></i>Update profile info
+                </div>
+                <!-- /.panel-heading -->
+                <div class="card-body">
+                    {% if result %}
+                    {% from "includes/_formhelpers.html" import render_field %}
+                    <form method="POST" action="/settings?user={{result.id}}">
+                        <div class="form-group">
+                            {{render_field(form.name, class_="form-control", value=result.name)}}
+                        </div>
+                        <div class="form-group">
+                            {{render_field(form.email, class="form-control", value=result.email)}}
+                        </div>
+                        <div class="form-group">
+                            {{render_field(form.password, class="form-control")}}
+                        </div>
+                        <div class="form-group">
+                            {{render_field(form.mobile, class="form-control", value=result.mobile)}}
+                        </div>
+                        <p>
+                            <input type="submit" class="btn btn-primary" value="Update Settings">
+                        </p>
+                    </form>
+                    {% endif%}
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-9 -->
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.container -->
+<br><br><br><br>
+{% endblock %}

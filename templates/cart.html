@@ -1,0 +1,105 @@
+{% extends 'layout.html' %}
+{% block body %}
+<style>
+    /* Additional styles for improved layout */
+    .table-container {
+        max-height: 300px; /* Adjust the max height as needed */
+        overflow-y: auto;
+    }
+
+    .grand-total-container {
+        position: sticky;
+        bottom: 0;
+        background-color: #f8f9fa; /* Adjust the background color as needed */
+        padding: 10px;
+    }
+
+    /* Style for the checkout button */
+    .checkout-btn {
+        margin-top: 10px;
+    }
+
+    /* Style for quantity adjustment buttons */
+    .quantity-adjust button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .quantity-adjust button:hover {
+        background-color: #0056b3;
+    }
+</style>
+<!-- Page Content -->
+<div class="container">
+    <br>
+    <br>
+
+    {% include 'includes/_flashmsg.html' %}
+    <a href="#" class="btn btn-primary" onclick="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 4.354a.5.5 0 0 0 0 .708L7.707 8l3.647 3.646a.5.5 0 1 0 .708-.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 0-.708-.708L7.707 7.293a1.5 1.5 0 0 0 0 2.121l3.647 3.646a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0 0-.708z"/>
+        </svg> Back
+    </a>
+
+    <br>
+
+    <h1>Shopping Cart</h1>
+
+    {% if cart_items %}
+        <!-- Container for the shopping cart items -->
+        <div class="table-container">
+          <table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Discount (%)</th> <!-- Updated column header -->
+            <th>Total</th>
+            <th>Action</th> <!-- New column for Remove button -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for product_id, item in cart_items.items() %}
+            <tr>
+                <td>{{ item['pName'] }}</td>
+                <td>Rs.{{ item['price'] }}</td>
+                <td>{{ item['quantity'] }}</td>
+                <td>{{ item['discount'] }}%</td>
+                <td class="total-price">Rs.{{ item['price'] * item['quantity'] * (1 - item['discount'] / 100) }}</td> <!-- Updated total calculation -->
+                <td>
+                    <form method="post" action="{{ url_for('remove_from_cart', product_id=product_id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+        </div>
+
+        <!-- Container for the Grand Total -->
+        <div class="grand-total-container text-right">
+            <h4>Grand Total: Rs.<span id="grand-total">{{ total_price }}</span></h4>
+
+            <!-- Checkout button -->
+            <a href="{{ url_for('checkout') }}" class="btn btn-success checkout-btn">Checkout</a>
+        </div>
+    {% else %}
+        <p>Your shopping cart is empty. <a href="{{ url_for('home') }}">Add books to your cart</a>.</p>
+    {% endif %}
+</div>
+
+<!-- JavaScript functions -->
+<script>
+
+    function goBack() {
+        setTimeout(function() {
+            window.location.href = document.referrer; // Reload the previous page
+        }, 100); // Adjust the delay time if necessary
+    }
+</script>
+{% endblock %}

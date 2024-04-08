@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends 'layout.html' %}
+{% block body %}
+<!-- Page Content -->
+  {% include 'includes/_flashmsg.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+             <br>
+            <br>
+             <h5> Hello,</h5>
+            <h1 class="my-4">{{session.s_name}}</h1>
+
+            <a href="#" class="btn btn-primary" id="goBackBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 4.354a.5.5 0 0 0 0 .708L7.707 8l3.647 3.646a.5.5 0 1 0 .708-.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 0-.708-.708L7.707 7.293a1.5 1.5 0 0 0 0 2.121l3.647 3.646a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0 0-.708z"/>
+        </svg> Back
+    </a>
+              <br>
+            <br>
+            <div class="list-group">
+                <a href="/profile?user={{session.uid}}" class="list-group-item">Pre-Order List</a>
+                <a href="/settings?user={{session.uid}}" class="list-group-item">Update Profile </a>
+                <a href="{{ url_for('wishlist', user=session.uid) }}" class="list-group-item">Wish-list</a>
+                  <a href="/mypurchase?user={{session.uid}}" class="list-group-item">My Purchase </a>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <br>
+            <h1 style="color :red;">My purchase</h1>
+            <div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+                <div class="row justify-content-center">
+                    {% if items %}
+                        {% for item in items %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4">
+                            <div class="card h-100">
+                                <a href="/{{ item.category }}?view={{ item.id }}">
+                                    <div class="card-img-top" style="background: url('{{ url_for('static', filename='image/product/' + item.category + '/' + item.picture) }}'); background-repeat: no-repeat; background-size: cover; height: 200px;"></div>
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="/{{ item.category }}?view={{ item.id }}">{{ item.pName }}</a>
+                                    </h5>
+                                    <h6 style="color: red ;" >Quantity : {{ item.quantity }}</h6>
+                                    <h7>Price: Rs.<span id="grand-total">{{ item.price }}</span></h7>
+                                    <h5 style="color : green ;">Payment Status:  {{ item.payment}}</h5>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-6 text-center">
+                                            </div>
+                                            <form id="removeItemForm" action="/remove_itemcart" method="POST">
+                                                <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}">
+                                                <button type="button" class="fas fa-trash-alt remove-btn" style="position: absolute; right: 5%; border: none; color: red;"></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted"></small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No items found in Purchase list.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Go back button
+    document.getElementById('goBackBtn').addEventListener('click', function() {
+        window.history.back();
+    });
+
+   // Remove item button
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Confirm with the user before proceeding
+            if (confirm("Are you sure you want to remove this item?")) {
+                // Get the form associated with this button
+                const form = this.closest('form');
+
+                // Submit the form using fetch API
+                fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Reload the page after successful deletion
+                        window.location.reload();
+                    } else {
+                        // Handle errors here, such as displaying an alert
+                        alert('Error deleting item.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Handle errors here, such as displaying an alert
+                    alert('Error deleting item.');
+                });
+            }
+        });
+    });
+</script>
+
+<style>
+    .fas.fa-trash-alt {
+        font-size: 40px; /* Adjust the font size as needed */
+    }
+    .container{
+            zoom:95%;}
+</style>
+
+</body>
+
+{% endblock %}
+</html>

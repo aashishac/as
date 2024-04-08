@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends 'layout.html' %}
+{% block body %}
+<!-- Page Content -->
+  {% include 'includes/_flashmsg.html' %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<br>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+             <br>
+            <br>
+             <h5> Hello,</h5>
+            <h1 class="my-4">{{session.s_name}}</h1>
+
+            <a href="#" class="btn btn-primary" onclick="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 4.354a.5.5 0 0 0 0 .708L7.707 8l3.647 3.646a.5.5 0 1 0 .708-.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 0-.708-.708L7.707 7.293a1.5 1.5 0 0 0 0 2.121l3.647 3.646a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0 0-.708z"/>
+        </svg> Back
+    </a>
+              <script>
+function goBack() {
+  window.history.back();
+}
+</script>
+            <br>
+            <br>
+            <div class="list-group">
+                <a href="/profile?user={{session.uid}}" class="list-group-item">Pre-Order List</a>
+                <a href="/settings?user={{session.uid}}" class="list-group-item">Update Profile </a>
+                <a href="{{ url_for('wishlist', user=session.uid) }}" class="list-group-item">Wish-list</a>
+                 <a href="/mypurchase?user={{session.uid}}" class="list-group-item">My Purchase </a>
+
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <br>
+   <h1 style="color : orange;">My Wishlist</h1>
+<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+    <div class="row justify-content-center">
+        {% if items %}
+            {% for item in items %}
+            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3 mb-4">
+                <div class="card h-100">
+                    <a href="/{{ item.category }}?view={{ item.id }}">
+                        <div class="card-img-top" style="background: url('{{ url_for('static', filename='image/product/' + item.category + '/' + item.picture) }}'); background-repeat: no-repeat; background-size: cover; height: 200px;"></div>
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="/{{ item.category }}?view={{ item.id }}">{{ item.pName }}</a>
+                        </h5>
+                        <h6 style="color: red;"><a href="/{{ item.category }}?view={{ item.id }}">{{ item.available }} stocks</a></h6>
+                        <h4>Rs.{{ item.price }}</h4><div class="container">
+    <div class="row">
+        <div class="col-md-6 text-center">
+
+        </div>
+
+       <form id="removeItemForm" action="/remove_item" method="POST">
+    <input type="hidden" id="item_id" name="item_id" value="{{ item.id }}">
+    <button type="button" class="fas fa-trash-alt " style ="position: absolute; right:5%; border:none; color: red;  " onclick="removeItem()">  </button>
+</form>
+        <style>
+            .fas.fa-trash-alt {
+    font-size: 40px; /* Adjust the font size as needed */
+}
+        </style>
+
+    </div>
+</div>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted"></small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No items found in wishlist.</p>
+        {% endif %}
+    </div>
+</div>
+        </div>
+
+
+
+
+
+<script>
+    function removeItem() {
+        // Confirm with the user before proceeding
+        if (confirm("Are you sure you want to remove this item?")) {
+            // Submit the form
+            document.getElementById("removeItemForm").submit();
+        }
+    }
+</script>
+
+
+        <style>
+
+            body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+.wishlist-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.wishlist-item button {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    float: right;
+}
+.container{
+            zoom:95%;}
+        </style>
+    </div>
+</div>
+
+</body>
+
+{% endblock %}
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Product List</h1>
+
+    {% if products %}
+        <table border="1">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Quantity</th>
+                <th>Action</th>
+            </tr>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td><img src="{{ product.image }}" alt="{{ product.name }}" height="50"></td>
+                    <td>{{ product.quantity }}</td>
+                    <td>
+                        <a href="{{ url_for('.addToCart', code=product.code, quantity=product.quantity) }}" class="btn btn-success">Add to Cart</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No products available.</p>
+    {% endif }
+
+</body>
+</html>

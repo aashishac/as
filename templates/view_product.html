@@ -1,0 +1,297 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<style>
+        /* Body styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        /* Container styles */
+        .container {
+            margin-top: 20px;
+        }
+
+  /* Header styles */
+    h1 {
+        color: #007bff;
+    }
+     .card {
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+     .container {
+            zoom: 90%;
+
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: grey;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: orange;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+          .star {
+            cursor: pointer;
+            font-size: 25px;
+            color: #ccc;
+            transition: color 0.3s ease;
+        }
+
+        .star.selected {
+            color: gold;
+        }
+
+        /* ... (Include the rest of the styles here) */
+
+        /* Add more styles as needed for the specific page */
+    </style>
+    <!-- Page Content -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 my-4">
+                 <!-- Back button with arrow logo -->
+       <a href="#" class="btn btn-primary" onclick="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 4.354a.5.5 0 0 0 0 .708L7.707 8l3.647 3.646a.5.5 0 1 0 .708-.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 0-.708-.708L7.707 7.293a1.5 1.5 0 0 0 0 2.121l3.647 3.646a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0 0-.708z"/>
+        </svg> Back
+    </a>
+
+
+<script>
+    function goBack() {
+    setTimeout(function() {
+        window.location.href = document.referrer; // Reload the previous page
+    }, 100); // Adjust the delay time if necessary
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating_value');
+    const ratingForm = document.getElementById('ratingForm');
+    const successMessage = document.getElementById('successMessage');
+
+    if (!successMessage) {
+        console.error('successMessage element not found');
+    }
+
+    let selectedRating = 0; // Variable to store the selected rating
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            selectedRating = value; // Update selected rating
+            ratingInput.value = value;
+
+            // Update star styles for visual feedback
+            stars.forEach(s => s.classList.remove('selected'));
+            this.classList.add('selected');
+            Array.from(this.previousElementSiblings || []).forEach(s => s.classList.add('selected'));
+        });
+    });
+
+    ratingForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get form data
+        const formData = new FormData(this);
+        formData.append('rating_value', selectedRating); // Append selected rating to form data
+
+        fetch('/process_rating', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error in the AJAX request');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                if (successMessage) {
+                    successMessage.textContent = data.message;
+                }
+                ratingForm.reset();
+                stars.forEach(s => s.classList.remove('selected'));
+                selectedRating = 0; // Reset selected rating
+
+                // Reload the page after a short delay (1 second)
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                if (successMessage) {
+                    successMessage.textContent = data.error || 'An error occurred while submitting the rating.';
+                }
+                console.error('Error:', data.error || 'Unknown error'); // Log the error message or a generic message
+            }
+        })
+        .catch(error => {
+            if (successMessage) {
+                successMessage.textContent = 'An error occurred while submitting the rating.';
+            }
+            console.error('Error:', error); // Log the error to the console
+        });
+    });
+});
+</script>
+                <h1>Categories</h1>
+                <div class="list-group">
+                    <a href="/fiction" class="list-group-item">Fiction</a>
+                    <a href="/nonfiction" class="list-group-item">Nonfiction</a>
+                    <a href="/scifi" class="list-group-item">Sci-Fi</a>
+                    <a href="/history" class="list-group-item">History</a>
+                </div>
+            </div>
+            <!-- /.col-lg-3 -->
+            <div class="col-lg-9">
+                {% include 'includes/_flashmsg.html' %}
+                <div class="row">
+                    {% for product in [fiction]%}
+                        <div class="col-lg-6">
+                            <div class="card mt-4">
+                                <img class="card-img-top img-fluid"
+                                    src="{{ url_for('static', filename='image/product/' + product.category + '/' + product.picture) }}"
+                                    alt="{{ product.pName }}">
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                        <div class="col-lg-6">
+                            <div class="card1 card-outline-secondary my-4">
+                                <div class="card-header">
+                                     Book Details
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title">{{ product.pName }}</h3>
+                                    <h6 >
+                                        <a style="color: red;" href="/fiction?view={{ product.id }}">{{ product.available }}
+                                            pcs stocks</a>
+                                    </h6>
+                                    <h6 style="color: magenta;">
+                                        <a href="/fiction?view={{ product.id }}">Book code: {{ product.pCode }}</a>
+                                    </h6>
+                                    <h5 class="card-text">Author: {{ product.author }}</h5>
+                                     <h5 style="color: brown;" class="card-text">Offer: {{ product.discount }}% Discount</h5>
+                                    <h4>Rs.{{ product.price }}</h4>
+
+
+                                    <div style="text-align: center; margin-top: 20px;">
+    <div class="row">
+        <form   action="{{ url_for('add_to_wishlist_route') }}" method="post">
+    <input type="hidden" name="product_id" value="{{ product.id }}">
+    <button  style="position: absolute ;left:63%;" type="submit" class="btn btn-primary"><i class="fas fa-heart"></i> Wish</button>
+</form>
+        <div class="col-md-6">
+
+
+            <a  style="position: absolute ;right:-32.7%;" href="{{ url_for('.add_to_cart', product_id=product.id) }}" class="btn btn-success" id="add-to-cart-btn">Add to Cart</a>
+        <a style="position: absolute ;right:25%; background-color: red; border-color: red; color: white;" href="{{ url_for(product.category, order=product.id) }}" class="btn btn-success btn-red" >Pre-Order Now</a></div>
+    </div>
+</div>
+
+                                </div>
+
+                                <br>
+                                <br>
+
+                                <div class="container">
+        <h3 style="color: green">Rate Book</h3>
+
+    <form id="ratingForm">
+        <label for="pid">Book Code:</label>
+        <input type="text" id="pid" name="pid" min="1" placeholder="book code please eg. t-003" required>
+
+        <label for="rating_value">Rating:</label>
+        <div id="ratingStars">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+
+        <input type="hidden" id="rating_value" name="rating_value" value="0"> <!-- Hidden input for selected rating -->
+        <input type="submit" value="submit">
+    </form>
+    </div>
+
+                            </div><a  style="position: absolute ;right:10.7%; color:green; " href="./fiction" >Do you want more books to read ?</a>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+
+
+                <!-- /.card -->
+                {% if x == '' %}
+                    <h2 class="mb-4">No similar books found</h2>
+                {% else %}
+                    <h2 class="mb-4">Similar books for you:</h2>
+                    <div class="row">
+                        {% for product in x[0] %}
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="card mb-4">
+                                    <a href="/{{ product.category }}?view={{ product.id }}">
+                                        <div class="card-img-top id_{{ product.id }}"
+                                            style="background: url('/static/image/product/{{ product.category }}/{{ product.picture }}'); background-repeat: no-repeat; background-size: cover; height:200px; width:100% "></div>
+                                    </a>
+                                    <div class="card-body">
+                                        <h5>
+                                            <a class="card-title" href="/{{ product.category }}?view={{ product.id }}">{{ product.pName }}</a>
+                                        </h5>
+                                        <h4>Rs.{{ product.price }}</h4>
+                                    </div>
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <!-- /.col-lg-9 -->
+        </div>
+        <!-- /.row -->
+    </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- /.container -->
+{% endblock %}

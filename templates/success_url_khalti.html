@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'layout.html' %}
+{% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Receipt</title>
+    <style>
+        /* Your CSS styles here */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .receipt {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .data-section {
+            margin-top: 20px;
+        }
+        .proceed-button {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff7f50; /* Orange color */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .proceed-button:hover {
+            background-color: #ff6347; /* Darker shade of orange */
+        }
+    </style>
+</head>
+<body>
+<div class="receipt">
+    <br>
+
+            <h1 class="my-4">Thankyou for shopping with us ! {{session.s_name}}</h1>
+    <h3 style="color: Green ; font-family: 'Times New Roman', Times, serif;">Your Payment status :</h3>
+
+     <h4 style="color: grey; text-align : center;">Congratulations! Your transaction was successful.</h4>
+    <div class="container">
+        <h3 style="color: Green ; font-family: 'Times New Roman', Times, serif; ">Payment Confirmation</h3>
+
+        <div class="data-section">
+            <div>
+
+                <div>
+                   <h6>Transaction Details</h6>
+    <p><strong>Product ID:</strong> {{ pidx }}</p>
+    <p><strong>Transaction ID:</strong> {{ transaction_id }}</p>
+    <p><strong>Amount in paisa:</strong> {{ amount }}</p>
+    <p><strong>Total Amount in paisa:</strong> {{ total_amount }}</p>
+    <p><strong>Mobile:</strong> {{ mobile }}</p>
+    <p><strong>Status:</strong> {{ status }}</p>
+    <p><strong>Purchase Order ID:</strong> {{ purchase_order_id }}</p>
+    <p><strong>Purchase Order Name:</strong> {{ purchase_order_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<h7> Note : Please save or print the conformation details.You might need it at delivery time Thankyou for your understanding ! </h7>
+    <br>
+    <button onclick="printReceipt()" class="proceed-button">Print Receipt</button> <!-- Print button -->
+</div>
+
+<script>
+    // Function to print the receipt
+    function printReceipt() {
+        window.print(); // Print the current page
+    }
+
+
+
+</script>
+
+</body>
+{% endblock %}
+</html>

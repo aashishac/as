@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends 'layout.html' %}
+{% block body %}
+
+<head>
+    <meta charset="UTF-8">
+
+
+<style>
+    .text-white{
+        color:black
+    }
+    /* Card styles */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensure the image doesn't overflow the card */
+    background-color: #fff; /* Background color for the card */
+
+}
+
+.card-body {
+    padding: 20px;
+    align-items: center;
+
+}
+
+.card-img-top {
+    max-width: 60%;
+    height: auto;
+    border-radius: 8px 8px 0 0; /* Rounded corners only at the top */
+    transition: transform 0.3s ease; /* Add transition for smooth hover effect */
+
+}
+
+
+/* Text styles */
+.text-black {
+    color: #000;
+    font-family: 'Times New Roman', serif; /* Use Times New Roman font */
+}
+
+.text-black h6 {
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 18px; /* Increase font size for better readability */
+    color: #333;
+    text-transform: capitalize; /* Capitalize the text */
+    transition: color 0.3s ease; /* Add transition for color change */
+}
+
+.text-black h6:hover {
+    color: #ff4500; /* Change color on hover */
+}
+
+/* Form control styles */
+.form-control {
+    width: 20%; /* Set the width of form controls */
+    border: 1px solid #ccc; /* Add border for form controls */
+    border-radius: 5px; /* Rounded corners for form controls */
+    padding: 5px; /* Add padding for form controls */
+    transition: border-color 0.3s ease; /* Add transition for border color change */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Change border color on focus */
+}
+    .text-black {
+    color: #000;
+    font-family: 'Times New Roman', serif; /* Use Times New Roman font */
+    position: relative; /* Required for positioning the tooltip */
+    display: inline-block; /* Ensures the tooltip covers only the text */
+    cursor: pointer; /* Change cursor on hover */
+}
+
+.text-black:hover::after {
+    content: attr(title); /* Show the title attribute as tooltip text */
+    position: absolute;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    bottom: 100%; /* Position above the text */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap; /* Prevent text wrapping */
+    z-index: 1;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+.text-black:hover::after {
+    opacity: 1; /* Show the tooltip on hover */
+}
+
+</style>
+<body style="background-color:black">
+<br>
+<br>
+    <h4><i class="fas fa-search" style="color : red ; size :50px ;"></i>Search for Books... and Get Recommendations </h4>
+
+
+ {% include 'includes/_flashmsg.html' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+                <form action="/recommend_books" method="post">
+                    <input name="user_input" type="text" class="form-control w-50" placeholder=" Enter Book Title... for eg. 1984"><br>
+                    <input type="submit" class="btn btn-lg btn-warning" value="Search">
+                </form>
+                <br>
+                {% if data %}
+    <h4>Recommendations for you:</h4>
+    <!-- Your code for displaying recommendations here -->
+{% else %}
+    <h4>No recommendations to show</h4>
+{% endif %}
+            </div>
+
+            {% if data %}
+
+             {% for i in data %}
+                <div class="col-md-3" style="margin-top:50px">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <img class="card-img-top" src="{{i[2]}}">
+                          <h6 style="color : green; font: new times roman; " title="Book name">  {{i[0]}}</h6>
+                       <h6 class="text-black" title="Author ">Author's Name :{{i[1]}}</h6>
+
+                        </div>
+                    </div>
+                </div>
+             {% endfor %}
+
+            {% endif %}
+
+
+
+
+        </div>
+    </div>
+
+
+
+</body>
+<br>
+
+{% endblock %}
+</html>
