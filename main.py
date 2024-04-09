@@ -12,7 +12,7 @@ from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators, SelectField
 from passlib.hash import sha256_crypt
 from functools import wraps
-#from flask_uploads import UploadSet, configure_uploads, IMAGES
+from flask_uploads import UploadSet, configure_uploads, IMAGES , secure_filename
 import timeit
 
 from flask import redirect, url_for, session
@@ -23,6 +23,7 @@ from wtforms import EmailField
 import pymysql
 import secrets
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 import hashlib
 import base64
 import requests
