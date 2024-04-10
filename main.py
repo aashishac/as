@@ -266,7 +266,7 @@ def index():
     # Calculate noOfItems dynamically based on the items in the cart
     noOfItems = get_no_of_items_in_cart()
 
-    return render_template('home.html', product_data=product_data, form=form, noOfItems=noOfItems)
+    return render_template('index.html', product_data=product_data, form=form, noOfItems=noOfItems)
 
 
 def get_no_of_items_in_cart(json_data=None):
@@ -683,7 +683,7 @@ def home():
     # Your code to calculate noOfItems
     noOfItems = 10  # Example value
 
-    return render_template('home.html', noOfItems=noOfItems)
+    return render_template('index.html', noOfItems=noOfItems)
 
 
 
