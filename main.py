@@ -12,7 +12,7 @@ from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators, SelectField
 from passlib.hash import sha256_crypt
 from functools import wraps
-from flask_uploads import UploadSet, configure_uploads, IMAGES , secure_filename
+#from flask_uploads import UploadSet, configure_uploads, IMAGES , secure_filename
 import timeit
 
 from flask import redirect, url_for, session
@@ -22,8 +22,8 @@ from flask_wtf import FlaskForm
 from wtforms import EmailField
 import pymysql
 import secrets
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures import FileStorage
+#from werkzeug.utils import secure_filename
+#from werkzeug.datastructures import FileStorage
 import hashlib
 import base64
 import requests
@@ -63,8 +63,8 @@ import functools
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.urandom(24)
 app.config['UPLOADED_PHOTOS_DEST'] = 'static/image/product'
-photos = UploadSet('photos', IMAGES)
-configure_uploads(app, photos)
+#photos = UploadSet('photos', IMAGES)
+#configure_uploads(app, photos)
 
 app.secret_key = '8gBm/:&EnhH.1/q'
 # Config MySQL
