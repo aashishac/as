@@ -74,13 +74,13 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'onlinebook'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
-app.config['MYSQL_PORT'] = 4306
+app.config['MYSQL_PORT'] = 5353
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'port': '4306',
+    'port': '5353',
     'database': 'onlinebook',
 }
 
